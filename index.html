@@ -1,0 +1,214 @@
+<html>
+<head>
+    <title>Text Editor</title>
+    <style>
+      
+      button{
+        background-color:whitesmoke;
+      }
+      body {
+      background-image: url("te2.png");
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: white;
+}
+textarea {
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    resize: vertical;
+    
+}
+
+        #editor {
+            width: 95%;
+            height: 500px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 16px;
+            
+        }
+    </style>
+</head>
+
+<body>
+    
+
+    <div>
+        <textarea id="editor"></textarea>
+        <button onclick="clearEditor()">Clear</button>
+        <button onclick="undo()">Undo</button>
+        <button onclick="redo()">Redo</button>
+        <button onclick="underlineText()">Underline</button>
+
+        <button onclick="bold()">Bold</button>
+        <button onclick="alignText(document.getElementById('editor'), 'left')">Left</button>
+        <button onclick="alignText(document.getElementById('editor'), 'right')">Right</button>
+        <!-- Create a button with onclick attribute that calls the alignText function with the center option -->
+<button onclick="alignText(document.getElementById('editor'), 'center')">Center</button>
+
+        <select id="color">
+          <option value="black">Black</option>
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+          <option value="yellow">Yellow</option>
+        </select>
+        <button onclick="changeColor()">Color</button>
+        <select id="size">
+          <option value="12">12 px</option>
+          <option value="14">14 px</option>
+          <option value="16">16 px</option>
+          <option value="18">18 px</option>
+          <option value="20">20 px</option>
+          <option value="80">80 px</option>
+        </select>
+        <button onclick="changeSize()">Size</button>
+        <select id="font">
+          <option value="Arial">Arial</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Courier">Courier</option>
+          <option value="Georgia">Georgia</option>
+        </select>
+        <button onclick="changeFont()">Font</button>
+        
+        <input type="file" onchange="addImage(event)">
+        
+    </div>
+
+    <script>
+        var editor = document.getElementById("editor");
+        var stack = [];
+        var current = -1;
+
+        function save() {
+            if (current != stack.length - 1) {
+                stack.splice(current + 1, stack.length - current - 1);
+            }
+            stack.push(editor.value);
+            current++;
+        }
+
+        function undo() {
+            if (current > 0) {
+                current--;
+                editor.value = stack[current];
+            }
+        }
+
+        function redo() {
+            if (current < stack.length - 1) {
+                current++;
+                editor.value = stack[current];
+            }
+        }
+
+        function clearEditor() {
+            editor.value = "";
+            save();
+        }
+
+        function changeFont() {
+          // Get the selected font value from the select element
+          var fontValue = document.getElementById("font").value;
+
+          // Set the font family style of the editor to the font value
+          editor.style.fontFamily = fontValue;
+
+          // Save the state
+          save();
+        }
+
+        function addImage(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.createElement("img");
+                img.src = e.target.result;
+                editor.appendChild(img);
+                save();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function bold() {
+        //  document.getElementById("editor").style.fontWeight = 'bold';
+        var textarea = document.getElementById("editor");
+        if (textarea.style.fontWeight == "bold") {
+    textarea.style.fontWeight = "normal";
+  } else {
+    textarea.style.fontWeight = "bold";
+  }
+       // Save the state
+       save();
+            }
+     function changeSize() {
+      // Get the selected size value from the select element
+      var sizeValue = document.getElementById("size").value;
+
+      // Set the font size style of the editor to the size value
+      editor.style.fontSize = sizeValue + "px";
+
+      // Save the state
+      save();
+     }
+     function changeColor() {
+       // Get the selected color value from the select element
+       var colorValue = document.getElementById("color").value;
+
+       // Set the color style of the editor to the color value
+       editor.style.color = colorValue;
+
+       // Save the state
+       save();
+     }
+     
+  // Get the current text in the textarea.
+  function underlineText() {
+  // Get the selected text from the editor
+  var text = document.getElementById("editor");
+  // Check if the text is already underlined or not
+  var isUnderlined = text.style.textDecoration == "underline";
+  // If it is underlined, remove the underline
+  if (isUnderlined) {
+    text.style.textDecoration = "none";
+  }
+  // If it is not underlined, add the underline
+  else {
+    text.style.textDecoration = "underline";
+  }
+  // Save the state
+  save();
+}
+
+     
+
+function alignText(textarea, option) {
+    // Check if the option is valid
+    if (option === "left" || option === "right" || option === "center") {
+      // Set the text-align property to the option value
+      textarea.style.textAlign = option;
+    } else {
+      // Throw an error if the option is invalid
+      throw new Error("Invalid alignment option");
+    }
+  }
+
+  
+
+  editor.addEventListener("input", save);
+        
+    </script>
+</body>
+</html>
+<!-- alignment marky strike font color buttel reminder spell check word count  --><!-- on click,conform box -->
+<!-- bg color -->
